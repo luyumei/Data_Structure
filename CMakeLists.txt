@@ -3,4 +3,4 @@ project(Data_Structure)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Data_Structure main.cpp)
+add_executable(Data_Structure main.cpp "Linear List.h" "My List.h")
