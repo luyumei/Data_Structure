@@ -21,7 +21,7 @@ static int code;
 int praser()
 {
     structFromScanner = scanner();
-    if(Expression()==0 || structFromScanner.value=="=")
+    if(Expression()==0 || structFromScanner.value=="reachTheEnd")
         return 0;
     else
         return 12;  //开头就不是数字
@@ -32,7 +32,8 @@ int Expression()
 {
     if(Term()==0)
     {
-        structFromScanner = scanner();
+        if(!("+" == structFromScanner.value || "-" == structFromScanner.value || ")" == structFromScanner.value || "=" == structFromScanner.value))
+            structFromScanner = scanner();
         if(Expression_prime()==0)
             return 0;
         else
@@ -49,7 +50,8 @@ int Expression_prime()
         structFromScanner = scanner();
         if(Term()==0)
         {
-            structFromScanner = scanner();
+            if(!("+" == structFromScanner.value || "-" == structFromScanner.value || ")" == structFromScanner.value || "=" == structFromScanner.value))
+                structFromScanner = scanner();
             if(Expression_prime()==0)
                 return 0;   //一二个候选匹配成功
             else
@@ -58,10 +60,13 @@ int Expression_prime()
         else
             return 9;   //9：Term有问题
     }
-    else if(")" == structFromScanner.value || "=" == structFromScanner.value)
-        return 0;
+    else if(")" == structFromScanner.value || "reachTheEnd" == structFromScanner.value)
+        return 0;   //WITHOUT SCAN FORWARD!!!
     else
+    {
+        std::cout << "右括号不匹配" << std::endl;
         return -1;  //神奇的错误！
+    }
 }
 // Term  -> FT’
 int Term()
@@ -95,7 +100,7 @@ int Term_prime()
             return 5;   //5：Factor有问题
     }
     else if("+" == structFromScanner.value || "-" == structFromScanner.value || ")" == structFromScanner.value || "=" == structFromScanner.value)
-        return 0;
+        return 0;   //WITHOUT SCAN FORWARD!!!
     else
         return -1;  //  神奇的错误！
 }
@@ -112,8 +117,10 @@ int Factor()
             if (")" == structFromScanner.value)
                 return 0;   //(Expression)得到匹配，factor()执行完毕
             else
+            {
                 std::cout << "右括号不匹配！" << std::endl;
-            return 1;    //1：右括号不匹配
+                return 1;    //1：右括号不匹配
+            }
         }
         else
             return 2;   //2：Expression有问题
