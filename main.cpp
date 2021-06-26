@@ -1,46 +1,23 @@
-#include <iostream>
-#include "Linear List.h"
+//
+// Created by RuoHao Li on 6/25/21.
+//
 
-using namespace std;
+#include "string"
+#include "iostream"
+#include "dict.h"
 
-int main() {
-    int value, position = 0, length;
-    cin >> length;
-    arrList<int> a(10000); //表a，长10
-//-------------------------------------------------------增------------------------------------------------------------//
-    for (int i = 0; i < length; i++) {
-        cin >> value; //欲插入的元素value
-        a.insert(position, value);
-        position++;
+extern dict scanner();
+extern int praser();
+std::string equation;
+
+int main(){
+    std::cin>>equation;
+    std::cout<<equation<<std::endl;
+    dict test;
+    while(1)
+    {
+        test=scanner();
+        if(test.category=="reachTheEnd")
+            return 0;
     }
-
-    // a.print();
-
-    /*int existed_value, new_value, new_position;
-    cin >> existed_value;
-    cin >> new_value;
-    if(a.getPos(existed_value) != -1)
-        a.prior_insert(a.getPos(existed_value) + 1,new_value);
-    else
-        a.append(new_value);
-
-    a.print();*/
-//-------------------------------------------------------删------------------------------------------------------------//
-    bool temp;
-    int Position;
-    cin >> Position;
-
-    if(Position > position){
-        cout << "error!";
-        return 0;
-    }
-    temp = a.del(Position - 2);   //删除位置p上的元素
-
-    if(temp != false)
-        a.print();
-/*-------------------------------------------------------查------------------------------------------------------------//
-    cin >> n;   //待查找的元素值
-
-    cout << a.getPos(n) << endl;    //返回所查元素第一次出现的位置*/
-    return 0;
 }
