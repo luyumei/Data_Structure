@@ -34,7 +34,7 @@ void infix2postfix()
         if ("number" == structFromScanner.category)
         {
             postfix = postfix + structFromScanner.value;
-            //#?
+            postfix = postfix + "#";
             structFromScanner = scanner();
             infix2postfix();
         }
@@ -74,12 +74,14 @@ void infix2postfix()
             }
             else if("*" == structFromScanner.value || "/" == structFromScanner.value)
             {
-                while (!operators.empty() && !(operators.top() == "(" || operators.top() == "+" || operators.top() == "-"))
+                while (!operators.empty() && operators.top() != "(" && operators.top() != "+" && operators.top() != "-")
                 {
                     postfix = postfix + operators.top();
                     operators.pop();
                 }
                 operators.push(structFromScanner.value);
+                structFromScanner = scanner();
+                infix2postfix();
             }
             /*else
             {

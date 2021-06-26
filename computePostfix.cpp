@@ -5,26 +5,37 @@
 #include "string"
 #include "stack"
 #include "iostream"
+#include "dict.h"
 using namespace std;
 
-string postfix;
-static char seek;
-static int subscript=0;
-static stack<char>operands;    //运算数栈
+static int subscript=1; //后缀表达式下标
+static stack<int>operands;    //运算数栈
 static int addend1;
 static int addend2;
 static int sum;
 
 int computePostfix()
 {
-    seek=postfix.at(subscript);
-    if(isdigit(seek))
+    if(isdigit(seekChar))
     {
-        operands.push(int(seek));
-        seek=postfix.at(subscript);
+        string tempStr;
+        tempStr=tempStr+seekChar;
+
+        seekChar=postfix.at(subscript);
+        subscript++;
+        while(seekChar!='#')
+        {
+            tempStr = tempStr + seekChar;
+            seekChar = postfix.at(subscript);
+            subscript++;
+        }
+        int linkedNumber = stoi(tempStr);
+        operands.push(linkedNumber);
+        seekChar=postfix.at(subscript);
+        subscript++;
         computePostfix();
     }
-    if('+'==seek)
+    if('+'==seekChar)
     {
         addend1=operands.top();
         operands.pop();
@@ -32,8 +43,19 @@ int computePostfix()
         operands.pop();
         sum=addend2+addend1;
         operands.push(sum);
+        if(subscript>postfix.length()-1)
+        {
+            cout << operands.top() << endl;
+            exit(operands.top());
+        }
+        else
+        {
+            seekChar = postfix.at(subscript);
+            subscript++;
+            computePostfix();
+        }
     }
-    if('-'==seek)
+    else if('-'==seekChar)
     {
         addend1=operands.top();
         operands.pop();
@@ -41,8 +63,19 @@ int computePostfix()
         operands.pop();
         sum=addend2-addend1;
         operands.push(sum);
+        if(subscript>postfix.length()-1)
+        {
+            cout << operands.top() << endl;
+            exit(operands.top());
+        }
+        else
+        {
+            seekChar = postfix.at(subscript);
+            subscript++;
+            computePostfix();
+        }
     }
-    if('*'==seek)
+    else if('*'==seekChar)
     {
         addend1=operands.top();
         operands.pop();
@@ -50,18 +83,39 @@ int computePostfix()
         operands.pop();
         sum=addend2*addend1;
         operands.push(sum);
+        if(subscript>postfix.length()-1)
+        {
+            cout << operands.top() << endl;
+            exit(operands.top());
+        }
+        else
+        {
+            seekChar = postfix.at(subscript);
+            subscript++;
+            computePostfix();
+        }
     }
-    if('/'==seek)
+    else if('/'==seekChar)
     {
         addend1=operands.top();
         operands.pop();
         addend2=operands.top();
         operands.pop();
-        if(addend2!=0)
+        if(addend1!=0)
             sum=addend2/addend1;
         else
             cout<<"除数为0！"<<endl;
         operands.push(sum);
+        if(subscript>postfix.length()-1)
+        {
+            cout << operands.top() << endl;
+            exit(operands.top());
+        }
+        else
+        {
+            seekChar = postfix.at(subscript);
+            subscript++;
+            computePostfix();
+        }
     }
-    return (operands.top());
 }

@@ -20,3 +20,4 @@ extern dict normal;
 
 extern std::string postfix;  //后缀表达式
 
+extern char seekChar;
