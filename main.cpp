@@ -8,16 +8,15 @@
 
 extern dict scanner();
 extern int praser();
+extern void infix2postfix();
 std::string equation;
+
+dict structFromScanner;
 
 int main(){
     std::cin>>equation;
     std::cout<<equation<<std::endl;
-    dict test;
-    while(1)
-    {
-        test=scanner();
-        if(test.category=="reachTheEnd")
-            return 0;
-    }
+
+    structFromScanner = scanner();
+    infix2postfix();
 }

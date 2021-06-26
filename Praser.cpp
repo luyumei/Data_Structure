@@ -3,77 +3,107 @@
 //
 
 #include <string>
+#include <iostream>
 #include "dict.h"
 
 extern dict scanner();
 
-void Expression();
-void Term();
-void Expression_prime();
+int Expression();
+int Term();
+int Expression_prime();
 int Factor();
-void Term_prime();
+int Term_prime();
 
 static dict structFromScanner;
+static int code;
 
 //总控
 int praser()
 {
     structFromScanner = scanner();
-    Expression();
-    if("#" != structFromScanner.value)
+    code=Expression();
+    if(0!=code)
         //error
         return (-1);
+    else
+        return 0;
+}
 
+// Expression  -> TE’
+int Expression()
+{
+    code=Term();
+    if(code!=0)
+        return (-1);
+    code=Expression_prime();
+    if(code!=0)
+        return (-1);
     return 0;
 }
-// Expression  -> TE’
-void Expression()
-{
-    Term();
-    Expression_prime();
-}
 // Expression ’ -> +TE’|-TE’|ε
-void Expression_prime()
+int Expression_prime()
 {
     if("+" == structFromScanner.value || "-" == structFromScanner.value)
     {
         structFromScanner = scanner();
-        Term();
-        Expression_prime();
+        code=Term();
+        if(code!=0)
+            return (-1);
+        code=Expression_prime();
+        if(code!=0)
+            return (-1);
     }
+    return 0;
 }
 // Term  -> FT’
-void Term()
+int Term()
 {
-    Factor();
-    Term_prime();
+    code=Factor();
+    if(code!=0)
+        return (-1);
+    code=Term_prime();
+    if(code!=0)
+        return (-1);
+    return 0;
 }
 // Term ’ -> *FT’|/FT’|ε
-void Term_prime()
+int Term_prime()
 {
     if("*" == structFromScanner.value || "/" == structFromScanner.value)
     {
         structFromScanner = scanner();
-        Factor();
-        Term_prime();
+        code=Factor();
+        if(code!=0)
+            return (-1);
+        code=Term_prime();
+        if(code!=0)
+            return (-1);
     }
+    return 0;
 }
 // Factor  -> ( Expression )|i
 int Factor()
 {
     if ("number" == structFromScanner.category)
+    {
         structFromScanner = scanner();
+        return 0;
+    }
     else if("(" == structFromScanner.value)
     {
         structFromScanner = scanner();
-        Expression();
+        code=Expression();
+        if(code!=0)
+            return -1;
         if(")" == structFromScanner.value)
+        {
             structFromScanner = scanner();
+            return 0;
+        }
         else
-            return (-1);
+            std::cout<<"右括号不匹配！"<<std::endl;
+            return (-1);    //右括号不匹配
     }
     else
         return (-1);
-
-    return 0;
 }
